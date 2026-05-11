@@ -1,0 +1,257 @@
+{
+  "entities": {
+    "siteConfig": {
+      "title": "Site Configuration",
+      "description": "Global settings for the website",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "logoText": { "type": "string" },
+        "email": { "type": "string" },
+        "github": { "type": "string" },
+        "linkedin": { "type": "string" },
+        "facebook": { "type": "string" },
+        "location": { "type": "string" }
+      }
+    },
+    "about": {
+      "title": "About Section",
+      "description": "Content for the about section",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "bio": { "type": "string" },
+        "image": { "type": "string" },
+        "experience": { "type": "string" },
+        "projectsCount": { "type": "string" }
+      }
+    },
+    "hero": {
+      "title": "Hero Section",
+      "description": "Content for the hero banner",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "name": { "type": "string" },
+        "phrases": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" },
+        "stats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "value": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "service": {
+      "title": "Service",
+      "description": "A service offered",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "icon": { "type": "string" },
+        "order": { "type": "number" },
+        "customLink": { "type": "string" }
+      },
+      "required": ["title", "description", "icon"]
+    },
+    "project": {
+      "title": "Project",
+      "description": "A portfolio project",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "image": { "type": "string" },
+        "link": { "type": "string" },
+        "showInHome": { "type": "boolean" },
+        "order": { "type": "number" },
+        "customLink": { "type": "string" }
+      },
+      "required": ["title", "category", "image"]
+    },
+    "testimonial": {
+      "title": "Testimonial",
+      "description": "Client feedback",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "content": { "type": "string" },
+        "image": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["name", "content"]
+    },
+    "blogPost": {
+      "title": "Blog Post",
+      "description": "A blog article",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "category": { "type": "string" },
+        "date": { "type": "string" },
+        "image": { "type": "string" },
+        "content": { "type": "string" },
+        "showInHome": { "type": "boolean" },
+        "order": { "type": "number" }
+      },
+      "required": ["title", "excerpt", "content"]
+    },
+    "contactMessage": {
+      "title": "Contact Message",
+      "description": "Message from the contact form",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    },
+    "aboutFact": {
+      "title": "About Fact",
+      "description": "Stats or facts for the about section (e.g. Experience, Projects)",
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" },
+        "value": { "type": "string" },
+        "color": { "type": "string" },
+        "isPublished": { "type": "boolean" },
+        "order": { "type": "number" }
+      },
+      "required": ["label", "value"]
+    },
+    "customSection": {
+      "title": "Custom Section",
+      "description": "Dynamic section with configurable layout",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "slug": { "type": "string" },
+        "layout": { "type": "string", "enum": ["grid", "slider", "list"] },
+        "cardType": { "type": "string", "enum": ["popup", "page"] },
+        "elementId": { "type": "string", "description": "ID for navigation anchors (e.g. #custom-section)" },
+        "position": { "type": "string", "enum": ["after-hero", "after-about", "after-services", "after-portfolio", "after-testimonials", "after-blog"] },
+        "pageSettings": {
+          "type": "object",
+          "properties": {
+            "theme": { "type": "string" },
+            "headerVisible": { "type": "boolean" },
+            "customCss": { "type": "string" }
+          }
+        },
+        "showInHome": { "type": "boolean" },
+        "order": { "type": "number" },
+        "isPublished": { "type": "boolean" },
+        "viewMoreLabel": { "type": "string" },
+        "showViewMore": { "type": "boolean" }
+      },
+      "required": ["title", "layout"]
+    },
+    "customItem": {
+      "title": "Custom Item",
+      "description": "Item/Card inside a custom section",
+      "type": "object",
+      "properties": {
+        "sectionId": { "type": "string" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "description": { "type": "string" },
+        "image": { "type": "string" },
+        "content": { "type": "string" },
+        "link": { "type": "string" },
+        "buttonLabel": { "type": "string" },
+        "showInHome": { "type": "boolean" },
+        "order": { "type": "number" },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["title", "sectionId"]
+    },
+    "dynamicPage": {
+      "title": "Dynamic Page",
+      "description": "Individually created landing or content pages",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "headerImage": { "type": "string" },
+        "showSearch": { "type": "boolean" },
+        "headerVisible": { "type": "boolean" },
+        "content": { "type": "string" },
+        "isPublished": { "type": "boolean" },
+        "order": { "type": "number" },
+        "seoTitle": { "type": "string" },
+        "seoDescription": { "type": "string" },
+        "seoKeywords": { "type": "string" },
+        "layout": { "type": "string", "enum": ["standard", "narrow", "full-width"] },
+        "customCss": { "type": "string" },
+        "customJs": { "type": "string" },
+        "category": { "type": "string" },
+        "buttons": { "type": "array" },
+        "socialLinks": { "type": "array" },
+        "form": { "type": "object" },
+        "isFeatured": { "type": "boolean" }
+      },
+      "required": ["title", "slug"]
+    },
+    "formSubmission": {
+      "title": "Form Submission",
+      "description": "User submission from dynamic page forms",
+      "type": "object",
+      "properties": {
+        "pageId": { "type": "string" },
+        "pageTitle": { "type": "string" },
+        "formTitle": { "type": "string" },
+        "data": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "designConfig": {
+      "title": "Design Settings",
+      "description": "Typography and color settings",
+      "type": "object",
+      "properties": {
+        "googleFonts": { "type": "string" },
+        "primaryFont": { "type": "string" },
+        "secondaryFont": { "type": "string" },
+        "sections": {
+          "type": "object",
+          "properties": {
+            "hero": { "type": "object" },
+            "about": { "type": "object" },
+            "portfolio": { "type": "object" },
+            "services": { "type": "object" },
+            "testimonials": { "type": "object" },
+            "blog": { "type": "object" },
+            "global": { "type": "object" }
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "config/site": { "schema": "siteConfig", "description": "Global site config" },
+    "config/about": { "schema": "about", "description": "About section content" },
+    "config/hero": { "schema": "hero", "description": "Hero section content" },
+    "config/design": { "schema": "designConfig", "description": "Design and typography config" },
+    "services": { "schema": "service", "description": "Collection of services" },
+    "projects": { "schema": "project", "description": "Collection of portfolio projects" },
+    "testimonials": { "schema": "testimonial", "description": "Collection of testimonials" },
+    "blog": { "schema": "blogPost", "description": "Collection of blog posts" },
+    "messages": { "schema": "contactMessage", "description": "Collection of contact messages" },
+    "aboutFacts": { "schema": "aboutFact", "description": "Collection of about section facts/stats" },
+    "customSections": { "schema": "customSection", "description": "Dynamic configurable sections" },
+    "customItems": { "schema": "customItem", "description": "Items for custom sections" },
+    "dynamicPages": { "schema": "dynamicPage", "description": "Individually created pages" },
+    "formSubmissions": { "schema": "formSubmission", "description": "Submissions from custom forms" }
+  }
+}

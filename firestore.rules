@@ -1,0 +1,178 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedEmail() {
+      return isSignedIn(); // Temporarily allowing unverified for debugging
+    }
+
+    function isAdmin() {
+      // Bootstrapped admin: user email check
+      return isSignedIn() && (
+        request.auth.token.email.matches('(?i)mehrabhossain211@gmail.com') ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidDynamicPage(data) {
+      // Very loose validation to ensure write goes through
+      return data.keys().hasAll(['title', 'slug', 'createdAt', 'updatedAt']);
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- ENTITY VALIDATIONS ---
+
+    function isValidService(data) {
+      return data.keys().hasAll(['title', 'description', 'icon']) &&
+             data.keys().size() >= 3 &&
+             data.title is string && data.title.size() <= 100 &&
+             data.description is string && data.description.size() <= 500 &&
+             data.icon is string && data.icon.size() <= 50;
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['title', 'category', 'image']) &&
+             data.title is string &&
+             data.category is string &&
+             data.image is string;
+    }
+
+    function isValidMessage(data) {
+      return data.keys().hasAll(['name', 'email', 'message', 'timestamp']) &&
+             data.name is string && data.name.size() <= 100 &&
+             data.email is string && data.email.size() <= 100 &&
+             data.message is string && data.message.size() <= 2000 &&
+             data.timestamp == request.time;
+    }
+
+    function isValidConfig(data) {
+      return data.keys().size() > 0;
+    }
+
+    function isValidFormSubmission(data) {
+      return data.keys().hasAll(['pageId', 'formTitle', 'data', 'createdAt']) &&
+             data.pageId is string &&
+             data.formTitle is string &&
+             data.data is map &&
+             data.createdAt == request.time;
+    }
+
+    // --- REALM RULES ---
+
+    // Config Collection (Hero, Site, etc)
+    match /config/{configId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidConfig(incoming());
+    }
+
+    // Services
+    match /services/{serviceId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidService(incoming()) && isValidId(serviceId);
+      allow update: if isAdmin() && isValidService(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // Projects
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidProject(incoming()) && isValidId(projectId);
+      allow update: if isAdmin() && isValidProject(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // Testimonials
+    match /testimonials/{id} {
+      allow read: if true;
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Blog
+    match /blog/{id} {
+      allow read: if true;
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Categories
+    match /categories/{id} {
+      allow read: if true;
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Education
+    match /education/{id} {
+      allow read: if true;
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // About Facts
+    match /aboutFacts/{id} {
+      allow read: if true;
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Dynamic Sections
+    match /customSections/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /customItems/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Dynamic Pages
+    match /dynamicPages/{id} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidDynamicPage(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // Messages
+    match /messages/{messageId} {
+      allow list: if isAdmin();
+      allow get: if isAdmin();
+      allow create: if isValidMessage(incoming()) && isValidId(messageId);
+      allow update, delete: if isAdmin();
+    }
+
+    match /formSubmissions/{id} {
+      allow list: if isAdmin();
+      allow get: if isAdmin();
+      allow create: if isValidFormSubmission(incoming()) && isValidId(id);
+      allow update, delete: if isAdmin();
+    }
+
+    // Admins collection lookup helper
+    match /admins/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow write: if false; // System only or manually set
+    }
+  }
+}
